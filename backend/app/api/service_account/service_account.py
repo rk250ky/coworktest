@@ -198,9 +198,9 @@ def createhook(name):
          "address": "https://coworkapp.me/test"
     }
 
-    #print(service.events().watch(calendarId= name, body = body).execute())
+    a = (service.events().watch(calendarId= name, body = body).execute())
 
-    a = service.channels().stop(body= body).execute()
+
     return a
 # pri pridavani eventu nemozem zabudnut nato ze je ho potreba pridat do db
 
