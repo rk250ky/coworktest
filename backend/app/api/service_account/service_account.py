@@ -195,16 +195,12 @@ def createhook(name):
 
     body= {
         "id": str(uuid.uuid4()),
-        "expiration": str(time.time() + 10000),
         "type": "web_hook",
-         "address": "https://coworkapp.me/test",
+        "address": "https://coworkapp.me/test",
 
     }
 
-    a = (service.events().watch(calendarId= name, body = body).execute())
-
-    print(a)
-    return a
+    service.events().watch(calendarId= name, body = body).execute()
 # pri pridavani eventu nemozem zabudnut nato ze je ho potreba pridat do db
 
 
@@ -219,7 +215,7 @@ def closehook(name):
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #(get_all_calendars())
-pprint('halo')
+# pprint('halo')
 
 
 

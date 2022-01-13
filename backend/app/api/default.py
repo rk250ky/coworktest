@@ -35,12 +35,12 @@ def send_static(path):
 
 @default_bp.route("/resources", methods=["GET"])
 def get_resources():
-    to_send=(createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-    return render_template("base.html",to_send=to_send)
+    createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+    return render_template("base.html")
 
 def close_resource():
-    to_send=(closehook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-    return render_template("base.html",to_send=to_send)
+    closehook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+    return render_template("base.html")
 
 
 @default_bp.route("/test", methods=["POST","GET"])
