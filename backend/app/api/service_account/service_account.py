@@ -1,3 +1,5 @@
+import uuid
+
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
@@ -189,13 +191,13 @@ def get_deleted_id(id): # treba cekovat pocet eventov v db a na internete
 
 
 def createhook(name):
-    url = 'https://www.googleapis.com/calendar/v3/calendars/'+ name +'/events/watch'
-    myobj = {
-        "id": "01234567-89ab-cdef-0123456789ab",
+    body= {
+        "id": uuid.uuid4(),
         "type": "web_hook",
-        "address": "https://coworkapp.com/notifications",
+         "address": "https://coworkapp.me/notifications"
     }
-    x = requests.post(url, data=myobj)
+
+    x = service.events().watch(name,body)
 
 
     return x.text
