@@ -39,7 +39,7 @@ from pprint import pprint
 API_NAME='calendar'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-location  = os.path.dirname(os.path.abspath(__file__)) +'\\api_for_ser\\coworkreservation-213a4920386a.json'
+location  = os.path.dirname(os.path.abspath(__file__)) +'/api_for_ser/coworkreservation-213a4920386a.json'
 Mask = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
 
 
@@ -208,7 +208,7 @@ def createhook(name):
 
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-# pprint(get_all_calendars())
+#pprint(get_all_calendars())
 # pprint('halo')
 
 
