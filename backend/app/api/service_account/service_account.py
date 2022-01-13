@@ -219,7 +219,7 @@ def closehook(name):
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #(get_all_calendars())
-# pprint('halo')
+pprint('halo')
 
 
 
