@@ -1,7 +1,10 @@
 from flask.blueprints import Blueprint
-from flask import render_template
+from flask import render_template,request
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask.helpers import send_from_directory
+from app.api.service_account.service_account import *
+
+
 
 ### swagger specific ###
 swagger_url = "/swagger"
@@ -28,3 +31,14 @@ def get_admin_site():
 @default_bp.route("/static/<path:path>")
 def send_static(path):
     return send_from_directory("static", path)
+
+
+@default_bp.route("/resources", methods=["GET"])
+def get_resources():
+    to_send=(createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
+    return render_template("base.html",to_send=to_send)
+
+@default_bp.route("/notifications", methods=["GET"])
+def get_notifications():
+    notifications = request.json
+    return render_template("base.html",notifications)

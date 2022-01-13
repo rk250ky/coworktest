@@ -18,7 +18,13 @@
         <button type="submit">Submit</button>
     </form>
 
+    <form action="/resources" method="get">
+        <button type="submdsfit">Submit</button>
+    </form>
     <ul id="testUl"></ul>
+
+    <p> sendtosubscribetohook: {{to_send}}</p>
+    <p> notifications: {{notifications}}</p>
     <script>
         let listOfMessages = document.querySelector("#testUl");
         fetch("/tenant")
