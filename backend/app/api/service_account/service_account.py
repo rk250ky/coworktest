@@ -191,26 +191,31 @@ def get_deleted_id(id): # treba cekovat pocet eventov v db a na internete
 
 
 def createhook(name):
+
     body= {
-        "id": uuid.uuid4(),
+        "id": str(uuid.uuid4()),
         "type": "web_hook",
-         "address": "https://coworkapp.me/notifications"
+         "address": "https://coworkapp.me/test"
     }
 
-    x = service.events().watch(name,body)
+    #print(service.events().watch(calendarId= name, body = body).execute())
 
-
-    return x.text
-
-
+    a = service.channels().stop(body= body).execute()
+    return a
 # pri pridavani eventu nemozem zabudnut nato ze je ho potreba pridat do db
 
 
+def closehook(name):
+    body = {
+        'id': 'dc58ad27-441d-4e0d-a2cd-b1ae48b74f7e',
+        'resourceId': 'X4JYCXxvM9bH4laEa-G5zaDhWcE',
 
+    }
+    print(service.channels().stop(body=body).execute())
 
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-#pprint(get_all_calendars())
+#(get_all_calendars())
 # pprint('halo')
 
 

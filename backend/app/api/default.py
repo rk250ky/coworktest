@@ -38,7 +38,12 @@ def get_resources():
     to_send=(createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
     return render_template("base.html",to_send=to_send)
 
-@default_bp.route("/notifications", methods=["GET"])
+def close_resource():
+    to_send=(closehook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
+    return render_template("base.html",to_send=to_send)
+
+
+@default_bp.route("/test", methods=["POST","GET"])
 def get_notifications():
     notifications = request.json
     return render_template("base.html",notifications)
