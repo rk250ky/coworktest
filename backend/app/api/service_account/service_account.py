@@ -203,7 +203,7 @@ def createhook(name):
 
     a = (service.events().watch(calendarId= name, body = body).execute())
 
-
+    print(a)
     return a
 # pri pridavani eventu nemozem zabudnut nato ze je ho potreba pridat do db
 
