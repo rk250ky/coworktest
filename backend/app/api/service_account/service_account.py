@@ -1,3 +1,4 @@
+import time
 import uuid
 
 from googleapiclient.discovery import build
@@ -194,8 +195,10 @@ def createhook(name):
 
     body= {
         "id": str(uuid.uuid4()),
+        "expiration": str(time.time() + 10000),
         "type": "web_hook",
-         "address": "https://coworkapp.me/test"
+         "address": "https://coworkapp.me/test",
+
     }
 
     a = (service.events().watch(calendarId= name, body = body).execute())
@@ -217,8 +220,6 @@ def closehook(name):
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #(get_all_calendars())
 # pprint('halo')
-
-
 
 
 
