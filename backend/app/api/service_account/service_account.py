@@ -192,25 +192,39 @@ def get_deleted_id(id): # treba cekovat pocet eventov v db a na internete
 
 
 def createhook(name):
+    try:
+        time_to_unix =  str((time.time() * 1000)+10)
+    except:
+        time_to_unix = str(0)
+        pprint('Error on unix time')
 
     body= {
         "id": str(uuid.uuid4()),
         "type": "web_hook",
         "address": "https://coworkapp.me/test",
 
+
     }
-
     service.events().watch(calendarId= name, body = body).execute()
-# pri pridavani eventu nemozem zabudnut nato ze je ho potreba pridat do db
 
 
-def closehook(name):
+
+def closehook(id,resourceid):
     body = {
         'id': 'dc58ad27-441d-4e0d-a2cd-b1ae48b74f7e',
         'resourceId': 'X4JYCXxvM9bH4laEa-G5zaDhWcE',
 
     }
     print(service.channels().stop(body=body).execute())
+
+
+
+
+
+
+
+
+
 
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))

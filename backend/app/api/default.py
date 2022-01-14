@@ -3,8 +3,7 @@ from flask import render_template,request
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask.helpers import send_from_directory
 from app.api.service_account.service_account import *
-
-
+import pprint
 
 ### swagger specific ###
 swagger_url = "/swagger"
@@ -39,12 +38,13 @@ def get_resources():
     return render_template("base.html")
 
 def close_resource():
-    closehook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+    closehook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com',"wefsdf")
     return render_template("base.html")
 
 
 @default_bp.route("/test", methods=["POST","GET"])
 def get_notifications():
     notifications = request.json
+    pprint("NOTIFICATION:")
     print(notifications)
     return render_template("base.html",notifications=notifications)
