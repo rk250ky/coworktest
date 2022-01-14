@@ -238,18 +238,18 @@ def createhook(name):
     body= {
         "id": str(uuid.uuid4()),
         "type": "web_hook",
-        "address": "https://coworkapp.me/test",
+        "address": "https://coworkapp.me/tests",
 
 
     }
-    #service.events().watch(calendarId= name, body = body).execute()
+    #return  service.events().watch(calendarId= name, body = body).execute()
 
 
 
 def closehook(id,resourceid):
     body = {
-        'id': 'dc58ad27-441d-4e0d-a2cd-b1ae48b74f7e',
-        'resourceId': 'X4JYCXxvM9bH4laEa-G5zaDhWcE',
+        'id': id,
+        'resourceId': resourceid,
 
     }
     print(service.channels().stop(body=body).execute())
@@ -277,7 +277,9 @@ def print_notification(entry):
 # print_notification(" ")
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-#(get_all_calendars())
+# pprint(get_all_calendars())
+# print(closehook('a7407511-832e-4c65-8f49-f11e198d8c7c','lGFADe716IaqF4NRWk785rkrF_c'))
+# print(createhook('inkk68nqv1fc68gcuv3qnlj9k0@group.calendar.google.com'))
 # pprint('halo')
 # add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
 

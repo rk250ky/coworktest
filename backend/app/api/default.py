@@ -42,7 +42,7 @@ def close_resource():
     return render_template("base.html")
 
 
-@default_bp.route("/test", methods=["POST","GET"])
+@default_bp.route("/tests", methods=["POST","GET"])
 def get_notifications():
     notifications = request.json
     print(notifications)
