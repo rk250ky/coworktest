@@ -4,7 +4,7 @@ import uuid
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
-import requests
+
 service_account_email_address = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
 
 
@@ -187,7 +187,44 @@ def get_deleted_id(id): # treba cekovat pocet eventov v db a na internete
             continue
         else:
             changed_id = updated_events['id']
-            print(changed_id)
+            print("changed events:" + changed_id)
+
+
+
+def add_events_to_db(id):
+    updated_events = get_all_events(id)
+    get_calendar_id = 1
+    get_tenant_id = 1
+    for updated_events in updated_events['items']:
+        calendar_id = get_calendar_id # hento treba urobit tak ze id = id vrati id zaznamu
+        room_id = updated_events['location'] or None # hento treba urobit tak ze meno = meno vrati id
+        name = updated_events['summary'] or None
+        start = change_date_to_db(updated_events['start'])
+        end = change_date_to_db(updated_events['end'])
+        google_id = id
+        tenant_id =get_tenant_id
+        updated= updated_events['updated']
+
+    print(calendar_id)
+    print(room_id)
+    print(name)
+    print(start)
+    print(end)
+    print(google_id)
+    print(tenant_id)
+    print(updated)
+
+
+
+def change_date_to_db(date):
+    data = date['dateTime']
+    data = data.split('+')
+    data = data[0].split('T')
+    data = data[0] + ' ' + data[1]
+    return data
+
+# def change_dbdate_to_api(date):
+
 
 
 
@@ -218,9 +255,14 @@ def closehook(id,resourceid):
     print(service.channels().stop(body=body).execute())
 
 
+import json
 
-def print_notification(data):
-    print(data)
+
+def print_notification(entry):
+    print(json.dumps(entry))
+    import sys
+    sys.stdout.flush()
+
 
 
 
@@ -237,8 +279,7 @@ def print_notification(data):
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #(get_all_calendars())
 # pprint('halo')
-
-
+# add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
 
 
 

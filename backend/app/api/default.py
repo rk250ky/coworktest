@@ -47,5 +47,7 @@ def get_notifications():
     notifications = request.json
     print(notifications)
     print("NOTIFICATION:")
+    print_notification(notifications)
+
 
     return render_template("base.html",notifications=notifications)

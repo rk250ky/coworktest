@@ -171,6 +171,7 @@ class EventDAO(SharedDaoMethods):
             session.commit()
             return self.to_array(new_event)[0]
 
+
 room_dao = RoomDAO(Room)
 calendar_dao = CalendarDAO(Calendar)
 event_dao = EventDAO(Event)
