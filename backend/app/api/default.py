@@ -44,7 +44,7 @@ def close_resource():
 
 @default_bp.route("/test", methods=["POST","GET"])
 def get_notifications():
-    notifications = request
+    notifications = request.json
     print(notifications)
     print("NOTIFICATION:")
     print_notification(notifications)
