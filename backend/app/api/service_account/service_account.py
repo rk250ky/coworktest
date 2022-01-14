@@ -219,6 +219,8 @@ def closehook(id,resourceid):
 
 
 
+def print_notification(data):
+    pprint(data)
 
 
 
