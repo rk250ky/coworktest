@@ -45,4 +45,5 @@ def close_resource():
 def get_notifications():
     notifications = request.json
     print_notification(notifications)
+
     return render_template("base.html",notifications=notifications)
