@@ -220,14 +220,19 @@ def closehook(id,resourceid):
 
 
 def print_notification(data):
-    pprint(data)
+    print(data)
 
 
 
-pprint('I am still here ')
 
 
 
+
+
+# pprint('I am still here ')
+
+
+# print_notification(" ")
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #(get_all_calendars())
