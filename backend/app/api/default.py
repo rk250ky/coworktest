@@ -44,8 +44,11 @@ def close_resource():
 
 @default_bp.route("/tests", methods=["POST","GET"])
 def get_notifications():
-    notifications = request.headers
-    print(notifications)
+    notifications = request.headers['X-Goog-Resource-ID']
+    print(request.headers['X-Goog-Channel-ID'])
+    print(request.headers['X-Goog-Message-Number'])
+    print(request.headers['X-Goog-Resource-ID'])
+    print(request.headers['X-Goog-Resource-State'])
     print("NOTIFICATION:")
     print_notification(notifications)
 
