@@ -1,11 +1,14 @@
 import time
 import uuid
-
+import datetime
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
 
 service_account_email_address = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
+
+from app.daos import event_dao
+
 
 
 
@@ -42,7 +45,7 @@ from pprint import pprint
 API_NAME='calendar'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-location  = os.path.dirname(os.path.abspath(__file__)) +'/api_for_ser/coworkreservation-213a4920386a.json'
+location  = os.path.dirname(os.path.abspath(__file__)) +'/coworkreservation-213a4920386a.json'
 Mask = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
 
 
@@ -197,33 +200,29 @@ def add_events_to_db(id):
     get_tenant_id = 1
     for updated_events in updated_events['items']:
         calendar_id = get_calendar_id # hento treba urobit tak ze id = id vrati id zaznamu
-        room_id = updated_events['location'] or None # hento treba urobit tak ze meno = meno vrati id
-        name = updated_events['summary'] or None
-        start = change_date_to_db(updated_events['start'])
-        end = change_date_to_db(updated_events['end'])
+        room_id = updated_events['location']  # hento treba urobit tak ze meno = meno vrati id
+        name = updated_events['summary']
+        start =datetime.datetime.strptime(change_to_db(updated_events['start']['dateTime']), '%Y-%m-%dT%H:%M:%S')
+        end = datetime.datetime.strptime(change_to_db(updated_events['end']['dateTime']), '%Y-%m-%dT%H:%M:%S')
         google_id = id
         tenant_id =get_tenant_id
         updated= updated_events['updated']
+        break
 
-    print(calendar_id)
-    print(room_id)
-    print(name)
-    print(start)
-    print(end)
-    print(google_id)
-    print(tenant_id)
-    print(updated)
+    # print(calendar_id)
+    # print(room_id)
+    # print(name)
+    # print(start)
+    # print(end)
+    # print(google_id)
+    # print(tenant_id)
+    # print(updated)
+    pprint(event_dao.get_count_events_from_calendar_id("11"))
 
 
-
-def change_date_to_db(date):
-    data = date['dateTime']
-    data = data.split('+')
-    data = data[0].split('T')
-    data = data[0] + ' ' + data[1]
-    return data
-
-# def change_dbdate_to_api(date):
+def change_to_db(data):
+    data = data.split("+")
+    return data[0]
 
 
 
@@ -286,7 +285,7 @@ def print_notification(entry):
 # print(closehook('a7407511-832e-4c65-8f49-f11e198d8c7c','lGFADe716IaqF4NRWk785rkrF_c'))
 #print(createhook('2livateegthoron91afp2tg054@group.calendar.google.com'))
 # pprint('halo')
-# add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+#add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
 
 
 

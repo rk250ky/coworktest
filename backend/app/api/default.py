@@ -34,7 +34,8 @@ def send_static(path):
 
 @default_bp.route("/resources", methods=["GET"])
 def get_resources():
-    createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+    add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
+    #createhook('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
     return render_template("base.html")
 
 def close_resource():

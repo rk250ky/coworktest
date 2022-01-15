@@ -1,14 +1,14 @@
 import os
 from pprint import pprint
 
-from path import get_service, get_other_service
+from service_account import get_service, get_other_service
 
 
 
 API_NAME='calendar'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-location  = os.path.dirname(os.path.abspath(__file__)) +'\\coworkreservation-213a4920386a.json'
+location  = os.path.dirname(os.path.abspath(__file__)) +'\coworkreservation-213a4920386a.json'
 Mask = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
 
 
@@ -119,8 +119,8 @@ def insert_role_on_calendar(calendarID,user,email):
     created_rule = service.acl().insert(calendarId=calendarID, body=request_body).execute()
 
 
-pprint(insert_calendar('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
+# pprint(insert_calendar('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 pprint(get_all_calendars())
-pprint('halo')
+# pprint('halo')
 
 

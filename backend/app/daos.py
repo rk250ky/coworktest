@@ -122,11 +122,12 @@ class SharedDaoMethods:
         return entry
 
 class CalendarDAO(SharedDaoMethods):
-    def add(self, tenant_id: int, name: str, google_id: str) -> Calendar:
-        new_calendar = Calendar(tenant_id=tenant_id, name=name, google_id=google_id)
+    def add(self, tenant_id: int, name: str, google_id: str, resource_id=None, webhook_id=None, expiration=None) -> Calendar:
+        new_calendar = Calendar(tenant_id=tenant_id, name=name, google_id=google_id, resource_id = resource_id,webhook_id= webhook_id, expiration = expiration )
         session.add(new_calendar)
         session.commit()
         return self.to_array(new_calendar)[0]
+
 
 
 
@@ -155,7 +156,7 @@ class EventDAO(SharedDaoMethods):
             end: datetime,
             google_id: str,
             tenant_id: int,
-            status: bool,
+
         ) -> Event:
             new_event = Event(
                 calendar_id=calendar_id, 
@@ -165,12 +166,19 @@ class EventDAO(SharedDaoMethods):
                 end=end,
                 google_id=google_id,
                 tenant_id=tenant_id,
-                status=status,
             )
             session.add(new_event)
             session.commit()
             return self.to_array(new_event)[0]
+    def get_all_events_from_calendar_id(self, google_id: str):
+        data = Event.query.join(Calendar)
+        data.filter(Calendar.google_id==google_id)
+        return self.to_array(data.all())
 
+    def get_count_events_from_calendar_id(self, google_id: str):
+        data = Event.query.join(Calendar)
+        data.filter(Calendar.google_id == google_id)
+        return data.count()
 
 room_dao = RoomDAO(Room)
 calendar_dao = CalendarDAO(Calendar)

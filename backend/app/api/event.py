@@ -64,7 +64,6 @@ def create():
         datetime.datetime.strptime(data["start"], '%Y-%m-%dT%H:%M:%S.%f%z'),
         datetime.datetime.strptime(data["end"], '%Y-%m-%dT%H:%M:%S.%f%z'),
         str(data["google_id"]),
-        int(data["tenant_id"]),
-        bool(data["status"])
+        int(data["tenant_id"])
     )
     return jsonify(new_event)
