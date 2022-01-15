@@ -120,7 +120,7 @@ def insert_role_on_calendar(calendarID,user,email):
 
 
 # pprint(insert_calendar('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-pprint(get_all_calendars())
+#pprint(get_all_calendars())
 # pprint('halo')
 
 
