@@ -217,8 +217,9 @@ def add_events_to_db(id):
     # print(google_id)
     # print(tenant_id)
     # print(updated)
-    pprint(event_dao.get_count_events_from_calendar_id("11"))
-
+    pprint(event_dao.get_all_events_from_calendar_resource_id_with_count("18","rr"))
+    a,b,c = (event_dao.get_all_events_from_calendar_resource_id_with_count("18","rr"))
+    # print(c[1]['id'])
 
 def change_to_db(data):
     data = data.split("+")
@@ -267,10 +268,30 @@ def print_notification(entry):
     import sys
     sys.stdout.flush()
 
+def change_to_dict_web(dataweb):
+    webdict = []
+    x = {}
+    for i in range(len(dataweb['items'])):
+        x['id'] = dataweb['items'][i]['id']
+        x['end'] = datetime.datetime.strptime(change_to_db(dataweb['items'][i]['end']['dateTime']), '%Y-%m-%dT%H:%M:%S')
+        x['start'] = datetime.datetime.strptime(change_to_db(dataweb['items'][i]['start']['dateTime']),
+                                                '%Y-%m-%dT%H:%M:%S')
+        x['location'] = dataweb['items'][i]['location'] or None
+        webdict.append(x)
+    return webdict
 
 
+def change_to_dict_db(datadatabaza):
 
-
+    datadict = []
+    y = {}
+    for i in range(len(datadatabaza)):
+        y['id'] = datadatabaza[i]['id']
+        y['end'] = datadatabaza[i]['end']
+        y['start'] = datadatabaza[i]['start']
+        y['location'] = 'sdf'
+        datadict.append(y)
+    return  datadict
 
 
 
@@ -286,7 +307,6 @@ def print_notification(entry):
 #print(createhook('2livateegthoron91afp2tg054@group.calendar.google.com'))
 # pprint('halo')
 #add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
-
 
 
 

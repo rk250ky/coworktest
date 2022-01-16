@@ -115,6 +115,26 @@ class SharedDaoMethods:
             converted.append(self.to_dict(results))
         return converted
 
+    def to_array_tables(self, results) -> list:
+
+        converted = []
+
+        try:
+            for i in range(len(results)):
+                for row in results[i]:
+                    entry = self.to_dict(row)
+                    if 'resource_id' in entry:
+                        converted[-1]['joined'] = entry
+                    else:
+                        converted.append(entry)
+
+        except:
+            converted.append(self.to_dict(results))
+        return converted
+
+
+
+
     def to_dict(self, row) -> dict:
         entry = {}
         for column in row.__table__.columns:
@@ -146,6 +166,16 @@ class RoomDAO(SharedDaoMethods):
         session.commit()
         return self.to_array(new_room)[0]
 
+
+    def check_if_exist(self,resource_id: str, webhook_id: str):
+        data = session.query(self.model)
+        data= data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id) )
+        if data.count() == 0:
+            return False
+        else:
+            return  True
+
+
 class EventDAO(SharedDaoMethods):
     def add(
             self, 
@@ -172,13 +202,23 @@ class EventDAO(SharedDaoMethods):
             return self.to_array(new_event)[0]
     def get_all_events_from_calendar_id(self, google_id: str):
         data = Event.query.join(Calendar)
-        data.filter(Calendar.google_id==google_id)
+        data = data.filter(Calendar.google_id==google_id)
         return self.to_array(data.all())
+
+    def get_all_events_from_calendar_resource_id_with_count(self, resource_id: str, webhook_id: str):
+        data = session.query(Event,Calendar).join(Calendar,Event.calendar_id == Calendar.id)
+        data = data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id) )
+        if data.first() == None:
+            return 0, None , {}
+        return data.count(), data.first().Calendar.google_id ,self.to_array_tables(data.all())
+
+
 
     def get_count_events_from_calendar_id(self, google_id: str):
         data = Event.query.join(Calendar)
-        data.filter(Calendar.google_id == google_id)
+        data = data.filter(Calendar.google_id == google_id)
         return data.count()
+
 
 room_dao = RoomDAO(Room)
 calendar_dao = CalendarDAO(Calendar)
