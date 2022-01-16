@@ -281,7 +281,7 @@ def change_to_dict_web(dataweb):
     return webdict
 
 
-def change_to_dict_db(datadatabaza):
+def change_to_dict_db(datadatabaza,name):
 
     datadict = []
     y = {}
@@ -289,7 +289,7 @@ def change_to_dict_db(datadatabaza):
         y['id'] = datadatabaza[i]['id']
         y['end'] = datadatabaza[i]['end']
         y['start'] = datadatabaza[i]['start']
-        y['location'] = 'sdf'
+        y['location'] = name
         datadict.append(y)
     return  datadict
 

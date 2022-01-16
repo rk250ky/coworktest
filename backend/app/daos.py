@@ -148,7 +148,13 @@ class CalendarDAO(SharedDaoMethods):
         session.commit()
         return self.to_array(new_calendar)[0]
 
-
+    def check_if_exist(self, resource_id: str, webhook_id: str):
+        data = session.query(self.model)
+        data = data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id))
+        if data.count() == 0:
+            return False
+        else:
+            return data.first().name, True
 
 
 class RoomDAO(SharedDaoMethods):
@@ -166,14 +172,6 @@ class RoomDAO(SharedDaoMethods):
         session.commit()
         return self.to_array(new_room)[0]
 
-
-    def check_if_exist(self,resource_id: str, webhook_id: str):
-        data = session.query(self.model)
-        data= data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id) )
-        if data.count() == 0:
-            return False
-        else:
-            return  True
 
 
 class EventDAO(SharedDaoMethods):
