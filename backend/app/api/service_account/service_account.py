@@ -280,6 +280,8 @@ def delete_different_events_from_web(data,id):
         except:
             print("ERROR V DELETE Z db")
         try:
+            print("---------------------------------------------------")
+            print(holder[i]['google_id'],event_data[i]['google_id'])
             delete_event(holder[i]['google_id'],event_data[i]['google_id'])
         except:
             print("ERROR V DELETE Z WEBU")

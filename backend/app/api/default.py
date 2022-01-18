@@ -83,9 +83,10 @@ def get_resources():
     print(db_data)
 
     get_all_events_that_are_not_in_web = [i for i in db_data if i not in web_data]
-
+    print("-------------------------------------------")
     print(get_all_events_that_are_not_in_web)
 
+    print("-------------------------------------------")
 
 
     if get_all_events_that_are_not_in_web == [{}]:
@@ -106,7 +107,6 @@ def close_resource():
 
 @default_bp.route("/tests", methods=["POST","GET"])
 def get_notifications():
-    return render_template("base.html")
     
     notifications = request.headers['X-Goog-Resource-ID']
     id_webhook = request.headers['X-Goog-Channel-ID']
