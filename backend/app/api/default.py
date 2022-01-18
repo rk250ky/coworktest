@@ -106,6 +106,8 @@ def close_resource():
 
 @default_bp.route("/tests", methods=["POST","GET"])
 def get_notifications():
+    return render_template("base.html")
+    
     notifications = request.headers['X-Goog-Resource-ID']
     id_webhook = request.headers['X-Goog-Channel-ID']
     resourceid = request.headers['X-Goog-Resource-ID']
