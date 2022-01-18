@@ -7,7 +7,7 @@ from google.oauth2 import service_account
 
 service_account_email_address = 'coworkreservationcalendar@coworkreservation.iam.gserviceaccount.com'
 
-from app.daos import event_dao
+from app.daos import event_dao,room_dao,tenant_dao,calendar_dao
 
 
 
@@ -115,21 +115,23 @@ def import_event(request_body,calendarID):
     imported_event = service.events().import_(calendarId=calendarID, body=request_body).execute()
     return imported_event
 
-def create_event(summary,calendar_id):
+def delete_event(calendar_id,id):
+    a = service.events().delete(calendarId=calendar_id, eventId=id).execute()
+    print(a)
+
+def create_event(summary,calendar_id,start,end,location):
     body = {
         'summary': summary,
         'description': 'A chance to hear more about Google\'s developer products.',
+        'location': location,
         'start': {
-            'dateTime': '2021-11-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': change_to_web(str(start)),
+            'timeZone': 'Europe/Prague',
         },
         'end': {
-            'dateTime': '2021-11-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': change_to_web(str(end)),
+            'timeZone': 'Europe/Prague',
         },
-        'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=2'
-        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -152,80 +154,22 @@ def insert_role_on_calendar(calendarID,user,email):
         },
         'role': 'writer'
     }
-
     created_rule = service.acl().insert(calendarId=calendarID, body=request_body).execute()
 
 
-def getlistintodb(list_json_of_events):
-    for list_json_of_events in list_json_of_events['items']:
-        print((list_json_of_events['id'] + ',' + list_json_of_events['updated']))
-        # hentu sa pri pridavanie do db momentalne to nieje preto lebo tam terba menit veci v db
-
-    return None
-
-
-
-def get_new_events(id):
-    updated_events = get_all_events(id)
-    db = 'ctd2b1mfsviq0icbau413acu5c' # tu su eventy z db v danom kalendari pod id
-    changed_id = []
-    for updated_events in updated_events['items']:
-        if updated_events['id'] in db:
-            print('here')
-            continue
-        else:
-            changed_id = updated_events['id']
-            print(changed_id)
-
-    return  None
-
-
-def get_deleted_id(id): # treba cekovat pocet eventov v db a na internete
-    updated_events = get_all_events(id)
-    db = 'ctd2b1mfsviq0icbau413acu5c' # tu su eventy z db v danom kalendari pod id
-    changed_id = []
-    for updated_events in updated_events['items']:
-        if updated_events['id'] in db:
-            print('here')
-            continue
-        else:
-            changed_id = updated_events['id']
-            print("changed events:" + changed_id)
-
-
-
 def add_events_to_db(id):
-    updated_events = get_all_events(id)
-    get_calendar_id = 1
-    get_tenant_id = 1
-    for updated_events in updated_events['items']:
-        calendar_id = get_calendar_id # hento treba urobit tak ze id = id vrati id zaznamu
-        room_id = updated_events['location']  # hento treba urobit tak ze meno = meno vrati id
-        name = updated_events['summary']
-        start =datetime.datetime.strptime(change_to_db(updated_events['start']['dateTime']), '%Y-%m-%dT%H:%M:%S')
-        end = datetime.datetime.strptime(change_to_db(updated_events['end']['dateTime']), '%Y-%m-%dT%H:%M:%S')
-        google_id = id
-        tenant_id =get_tenant_id
-        updated= updated_events['updated']
-        break
+    #pouzi to iste ako si to robil na webhooku teda dataweb a len funkciu na pridanie do db
+    print('list')
 
-    # print(calendar_id)
-    # print(room_id)
-    # print(name)
-    # print(start)
-    # print(end)
-    # print(google_id)
-    # print(tenant_id)
-    # print(updated)
-    pprint(event_dao.get_all_events_from_calendar_resource_id_with_count("18","rr"))
-    a,b,c = (event_dao.get_all_events_from_calendar_resource_id_with_count("18","rr"))
-    # print(c[1]['id'])
 
 def change_to_db(data):
     data = data.split("+")
     return data[0]
 
-
+def change_to_web(data):
+    data = data.split(" ")
+    data = data[0]+'T'+data[1]
+    return data
 
 
 def createhook(name):
@@ -239,27 +183,16 @@ def createhook(name):
         "id": str(uuid.uuid4()),
         "type": "web_hook",
         "address": "https://coworkapp.me/tests",
-
-
     }
     #return  service.events().watch(calendarId= name, body = body).execute()
-
-
-
-
-
-
 
 
 def closehook(id,resourceid):
     body = {
         'id': id,
         'resourceId': resourceid,
-
     }
     print(service.channels().stop(body=body).execute())
-
-
 import json
 
 
@@ -268,48 +201,99 @@ def print_notification(entry):
     import sys
     sys.stdout.flush()
 
-def change_to_dict_web(dataweb):
+def change_to_dict_web(dataweb,name):
     webdict = []
-    x = {}
     for i in range(len(dataweb['items'])):
+        x = {}
         x['id'] = dataweb['items'][i]['id']
+        try:
+            x['name'] = dataweb['items'][i]['summary']
+        except:
+            x['name'] = 'None'
         x['end'] = datetime.datetime.strptime(change_to_db(dataweb['items'][i]['end']['dateTime']), '%Y-%m-%dT%H:%M:%S')
         x['start'] = datetime.datetime.strptime(change_to_db(dataweb['items'][i]['start']['dateTime']),
-                                                '%Y-%m-%dT%H:%M:%S')
-        x['location'] = dataweb['items'][i]['location'] or None
+                                                   '%Y-%m-%dT%H:%M:%S')
+        x['location'] = name
         webdict.append(x)
     return webdict
 
 
 def change_to_dict_db(datadatabaza,name):
-
+    if len(datadatabaza) == 0:
+        return [{}]
     datadict = []
-    y = {}
     for i in range(len(datadatabaza)):
-        y['id'] = datadatabaza[i]['id']
+        y = {}
+        y['id'] = datadatabaza[i]['google_id']
+        y['name'] = datadatabaza[i]['name']
         y['end'] = datadatabaza[i]['end']
         y['start'] = datadatabaza[i]['start']
         y['location'] = name
         datadict.append(y)
     return  datadict
 
+def add_differnet_events_to_db(data,holder):
+    calendar_id = holder['id']
+    room_id = room_dao.get_all_id_by_name(data['location'])[0]['id']
+    name =  data['name']
+    start = data['start']
+    end = data['end']
+    google_id = data['id']
+    tenant_id = holder['tenant_id']
+    event_dao.add(calendar_id, room_id, name, start, end, google_id, tenant_id)
 
+def add_differnet_events_to_web(data,holder):
+    for i in range(len(holder)):
+        calendar_id_id = holder[i]['id']
+        calendar_id = holder[i]['google_id']
+        room_id = room_dao.get_all_id_by_name(data['location'])[0]['id']
+        location = data['location']
+        name =  data['name']
+        start = data['start']
+        end = data['end']
+        tenant_id = holder[i]['tenant_id']
+        try:
+            data_from_created = create_event(name,calendar_id,start,end,location)
+        except:
+            print('error na calendar_id pridavanie do ostatnych kalendarov')
+            continue
+        try:
+            event_dao.add(calendar_id_id, room_id, name, start, end,data_from_created['id'], tenant_id)
+        except:
+            print('Error pri pridavani do db v add sync')
+            continue
 
+def delete_different_events_from_db(data):
+    holder = event_dao.get_all_events_by_name_and_google_id(data['id'],data['name'])
+    for i in range(len(holder)):
+        try:
+            event_dao.delete(holder[i]['id'])
+        except:
+            print('Chyba pri delete z db')
 
-# pprint('I am still here ')
+def delete_different_events_from_web(data,id):
+    holder = calendar_dao.get_all_id_by_name_exept_id(data['location'],id)
+    for i in range(len(holder)):
+        event_data = event_dao.get_all_events_by_name_and_date_are_not_google_id(data['start'],data['end'],data['name'],data['id'])
+        try:
+            event_dao.delete(event_data[i]['id'])
+        except:
+            print("ERROR V DELETE Z db")
+        try:
+            delete_event(holder[i]['google_id'],event_data[i]['google_id'])
+        except:
+            print("ERROR V DELETE Z WEBU")
 
 
 # print_notification(" ")
 # get_new_events(('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
 #pprint(create_event('test','3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com'))
-# pprint(get_all_calendars())
+#pprint(get_all_calendars())
 # print(closehook('a7407511-832e-4c65-8f49-f11e198d8c7c','lGFADe716IaqF4NRWk785rkrF_c'))
 #print(createhook('2livateegthoron91afp2tg054@group.calendar.google.com'))
 # pprint('halo')
 #add_events_to_db('3cmm3tsjhi70hgvk1j9p67k5r0@group.calendar.google.com')
-
-
-
+# insert_calendar('mrq1aii81hde7s2l5l5ogcti50@group.calendar.google.com')
 
 
 

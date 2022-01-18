@@ -20,7 +20,7 @@ class TenantDAO:
         ]
 
     def get_by_name(self, name: str):
-        return session.query(self.model).filter_by(name=name).first()
+        return session.query(self.model).filter(Tenant.name==name).first()
 
     def get_by_email(self, email: str):
         return session.query(self.model).filter_by(email=email).first()
@@ -30,6 +30,8 @@ class TenantDAO:
         session.add(new_tenant)
         session.commit()
         return new_tenant
+
+
 
 
 tenant_dao = TenantDAO(Tenant)
@@ -154,8 +156,19 @@ class CalendarDAO(SharedDaoMethods):
         if data.count() == 0:
             return False
         else:
-            return data.first().name, True
+            return  True
 
+
+    def get_all_id_by_name_exept_id(self, name: str, id: str):
+        data = session.query(self.model)
+        data = data.filter(Calendar.name == name, Calendar.id != id)
+
+        return self.to_array(data.all())
+
+    def get_all_calendar_by_resource_and_webhook_id(self, resource_id: str, webhook_id: str):
+        data = session.query(self.model)
+        data = data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id))
+        return data.first().id,data.first().name,data.first().google_id ,
 
 class RoomDAO(SharedDaoMethods):
     def add(
@@ -172,7 +185,10 @@ class RoomDAO(SharedDaoMethods):
         session.commit()
         return self.to_array(new_room)[0]
 
-
+    def get_all_id_by_name(self, name: str):
+        data = session.query(self.model)
+        data = data.filter(Room.building == name)
+        return self.to_array(data.first())
 
 class EventDAO(SharedDaoMethods):
     def add(
@@ -198,24 +214,34 @@ class EventDAO(SharedDaoMethods):
             session.add(new_event)
             session.commit()
             return self.to_array(new_event)[0]
+
     def get_all_events_from_calendar_id(self, google_id: str):
         data = Event.query.join(Calendar)
         data = data.filter(Calendar.google_id==google_id)
         return self.to_array(data.all())
 
-    def get_all_events_from_calendar_resource_id_with_count(self, resource_id: str, webhook_id: str):
+    def get_all_events_from_calendar_resource_id(self, resource_id: str, webhook_id: str):
         data = session.query(Event,Calendar).join(Calendar,Event.calendar_id == Calendar.id)
         data = data.filter((Calendar.resource_id == resource_id) & (Calendar.webhook_id == webhook_id) )
         if data.first() == None:
-            return 0, None , {}
-        return data.count(), data.first().Calendar.google_id ,self.to_array_tables(data.all())
+            return {}
+        return self.to_array_tables(data.all())
 
-
+    def get_all_events_by_name_and_google_id(self,google_id:str, name:str):
+        data = session.query(self.model)
+        data = data.filter((Event.google_id == google_id) & (Event.name == name) )
+        return self.to_array(data.first())
 
     def get_count_events_from_calendar_id(self, google_id: str):
         data = Event.query.join(Calendar)
         data = data.filter(Calendar.google_id == google_id)
         return data.count()
+
+    def get_all_events_by_name_and_date_are_not_google_id(self, start: datetime,  end: datetime,name: str ,id :str):
+        data = session.query(self.model)
+        data = data.filter((Event.google_id != id) & (Event.name == name)& (Event.start == start) & (Event.end == end))
+        return self.to_array(data.all())
+
 
 
 room_dao = RoomDAO(Room)
