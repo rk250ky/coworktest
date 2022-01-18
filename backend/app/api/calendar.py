@@ -64,7 +64,7 @@ def create_calendar():
     # try:
     data = request.json
     new_calendar = calendar_dao.add(
-        int(data["tenant_id"]), data["name"], data["google_id"]
+        int(data["tenant_id"]), data["name"], data["google_id"] , data["resource_id"], data["webhook_id"]
     )
     return jsonify(new_calendar)
     # except Exception as err:

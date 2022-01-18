@@ -297,4 +297,3 @@ def delete_different_events_from_web(data,id):
 
 
 
-
